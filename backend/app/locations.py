@@ -1,0 +1,31 @@
+CITIES = [
+    {"city": "New York", "country": "United States", "lat": 40.7128, "lng": -74.0060},
+    {"city": "London", "country": "United Kingdom", "lat": 51.5074, "lng": -0.1278},
+    {
+        "city": "Dubai",
+        "country": "United Arab Emirates",
+        "lat": 25.2048,
+        "lng": 55.2708,
+    },
+    {"city": "Singapore", "country": "Singapore", "lat": 1.3521, "lng": 103.8198},
+    {"city": "Lahore", "country": "Pakistan", "lat": 31.5204, "lng": 74.3587},
+    {"city": "Karachi", "country": "Pakistan", "lat": 24.8607, "lng": 67.0011},
+    {"city": "Tokyo", "country": "Japan", "lat": 35.6762, "lng": 139.6503},
+    {"city": "Sydney", "country": "Australia", "lat": -33.8688, "lng": 151.2093},
+    {"city": "Berlin", "country": "Germany", "lat": 52.5200, "lng": 13.4050},
+    {"city": "Toronto", "country": "Canada", "lat": 43.6532, "lng": -79.3832},
+    {"city": "Sao Paulo", "country": "Brazil", "lat": -23.5505, "lng": -46.6333},
+    {"city": "Lagos", "country": "Nigeria", "lat": 6.5244, "lng": 3.3792},
+    {"city": "Moscow", "country": "Russia", "lat": 55.7558, "lng": 37.6173},
+    {"city": "Mumbai", "country": "India", "lat": 19.0760, "lng": 72.8777},
+    {"city": "Shanghai", "country": "China", "lat": 31.2304, "lng": 121.4737},
+    {"city": "Paris", "country": "France", "lat": 48.8566, "lng": 2.3522},
+    {"city": "Zurich", "country": "Switzerland", "lat": 47.3769, "lng": 8.5417},
+    {"city": "Istanbul", "country": "Turkey", "lat": 41.0082, "lng": 28.9784},
+    {"city": "Cape Town", "country": "South Africa", "lat": -33.9249, "lng": 18.4241},
+    {"city": "Mexico City", "country": "Mexico", "lat": 19.4326, "lng": -99.1332},
+    {"city": "Seoul", "country": "South Korea", "lat": 37.5665, "lng": 126.9780},
+    {"city": "Riyadh", "country": "Saudi Arabia", "lat": 24.7136, "lng": 46.6753},
+]
+
+CITY_BY_NAME = {city["city"]: city for city in CITIES}

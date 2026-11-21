@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fraud Detection Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2.5 4.5 5.8v5.4c0 4.6 3.1 8.9 7.5 10.3 4.4-1.4 7.5-5.7 7.5-10.3V5.8L12 2.5Z"
+              stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M8.2 12.4h2.1l1.2-2.6 1.5 4.3 1.1-1.7h1.7"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Fraud Detection Console</h1>
+        <p>Rule engine <span class="vs">vs</span> machine learning &middot; live comparison</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="rate-field">
+        <label for="tpsInput">Rate</label>
+        <input type="number" id="tpsInput" value="3" min="0.2" max="20" step="0.5" />
+        <span class="unit">txn/s</span>
+      </div>
+
+      <div class="btn-group">
+        <button id="runBtn" class="btn btn-primary" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7-4.5-7-4.5Z" fill="currentColor"/></svg>
+          Run
+        </button>
+        <button id="pauseBtn" class="btn" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5h2v9h-2v-9Zm3 0h2v9h-2v-9Z" fill="currentColor"/></svg>
+          Pause
+        </button>
+        <button id="resetBtn" class="btn" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M13 8a5 5 0 1 1-1.6-3.7M13 3v2.6h-2.6" stroke="currentColor" stroke-width="1.5"
+                  fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Reset
+        </button>
+      </div>
+
+      <div id="statusPill" class="status-pill status-idle"><i class="pulse"></i>Idle</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="globe-panel">
+      <div id="globeViz"></div>
+
+      <div class="globe-overlay">
+        <span class="overlay-title">Global transaction flow</span>
+        <span class="overlay-hint">Each line is one recorded transaction</span>
+      </div>
+
+      <div class="legend">
+        <div><span class="dot dot-completed"></span> Completed</div>
+        <div><span class="dot dot-suspicious"></span> Suspicious</div>
+        <div><span class="dot dot-failed"></span> Failed</div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <div class="panel-head">
+        <div class="headline">
+          <span class="headline-value" id="statTotal">0</span>
+          <span class="headline-label">transactions processed</span>
+        </div>
+        <div class="headline headline-right">
+          <span class="headline-value headline-value-sm" id="statFraudRate">0.0%</span>
+          <span class="headline-label">alert rate</span>
+        </div>
+      </div>
+
+      <div class="composition">
+        <div class="comp-bar" role="img" aria-label="Transaction outcome breakdown">
+          <span class="seg seg-completed" id="segCompleted"></span>
+          <span class="seg seg-suspicious" id="segSuspicious"></span>
+          <span class="seg seg-failed" id="segFailed"></span>
+        </div>
+        <div class="comp-legend">
+          <span><i class="dot dot-completed"></i>Completed <b id="statCompleted">0</b></span>
+          <span><i class="dot dot-suspicious"></i>Suspicious <b id="statSuspicious">0</b></span>
+          <span><i class="dot dot-failed"></i>Failed <b id="statFailed">0</b></span>
+        </div>
+      </div>
+
+      <nav class="panel-tabs">
+        <button class="tab-btn active" data-tab="feed">Feed</button>
+        <button class="tab-btn" data-tab="suspicious">Alerts <span id="suspiciousCount" class="badge">0</span></button>
+        <button class="tab-btn" data-tab="failed">Failed <span id="failedCount" class="badge badge-muted">0</span></button>
+        <button class="tab-btn" data-tab="accounts">Accounts</button>
+        <button class="tab-btn" data-tab="metrics">Models</button>
+      </nav>
+
+      <div id="tab-feed" class="tab-content active">
+        <div id="feedList" class="txn-list" data-empty="Press Run to start the simulation."></div>
+      </div>
+      <div id="tab-suspicious" class="tab-content">
+        <div id="suspiciousList" class="txn-list" data-empty="No suspicious activity flagged yet."></div>
+      </div>
+      <div id="tab-failed" class="tab-content">
+        <div id="failedList" class="txn-list" data-empty="No failed transactions yet."></div>
+      </div>
+      <div id="tab-accounts" class="tab-content">
+        <div id="accountsView"></div>
+      </div>
+      <div id="tab-metrics" class="tab-content">
+        <div id="metricsContent" class="metrics-box">Loading model metrics&hellip;</div>
+      </div>
+    </aside>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-top">
+        <button id="modalBack" class="modal-back hidden" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button id="modalClose" class="modal-close" type="button" aria-label="Close">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/globe.gl"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
